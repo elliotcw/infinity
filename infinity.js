@@ -222,11 +222,12 @@
   // - `listView`: the ListView needing to be updated.
 
   function updateStartIndex(listView) {
+    console.log($('.scrollable').children().offset().top);
     var index, length, curr, pages, indexInView,
         lastIndex, nextLastIndex,
         startIndex = listView.startIndex,
-        viewTop = $(window).scrollTop() - listView.top,
-        viewHeight = $(window).height(),
+        viewTop = $('.scrollable').children().offset().top - listView.top,
+        viewHeight = $('.scrollable').children().height(),
         viewBottom = viewTop + viewHeight,
         nextIndex = startIndexWithinRange(listView, viewTop, viewBottom);
 
@@ -564,8 +565,8 @@
 
       attach: function(listView) {
         if(!eventIsBound) {
-          $(window).on('scroll', scrollHandler);
-          $(window).on('resize', resizeHandler);
+          $('.scrollable').on('scroll', scrollHandler);
+          $('.scrollable').on('resize', resizeHandler);
           eventIsBound = true;
         }
         boundViews.push(listView);
@@ -591,8 +592,8 @@
           if(boundViews[index] === listView) {
             boundViews.splice(index, 1);
             if(boundViews.length === 0) {
-              $(window).off('scroll', scrollHandler);
-              $(window).off('resize', resizeHandler);
+              $('.scrollable').off('scroll', scrollHandler);
+              $('.scrollable').off('resize', resizeHandler);
               eventIsBound = false;
             }
             return true;
@@ -685,7 +686,7 @@
   // Returns false if the Page is at max capacity; false otherwise.
 
   Page.prototype.hasVacancy = function() {
-    return this.height < $(window).height() * config.PAGE_TO_SCREEN_RATIO;
+    return this.height < $('.scrollable').children().height() * config.PAGE_TO_SCREEN_RATIO;
   };
 
 
@@ -891,7 +892,7 @@
     var $el = listItem.$el,
         offset = $el.offset();
     listItem.top = yOffset;
-    listItem.height = $el.outerHeight(true);
+    listItem.height = $el.height();
     listItem.bottom = listItem.top + listItem.height;
     listItem.width = $el.width();
   }
@@ -953,4 +954,4 @@
     return infinity;
   };
 
-}(window, Math, jQuery);
+}(window, Math, $);
